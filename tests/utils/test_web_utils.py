@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 
 from src.utils.web_utils import scrape_webpage
@@ -16,3 +18,5 @@ def test_scrape_hurricanes_content() -> None:
         content = file.read()
     result = scrape_webpage(content)
     assert result.title == "1975 Pacific hurricane season - Wikipedia"
+    assert result.metadata.url == "test"
+    assert result.metadata.last_updated == datetime(2024, 7, 20, 18, 53)
