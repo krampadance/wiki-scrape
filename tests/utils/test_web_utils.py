@@ -37,7 +37,7 @@ def test_scrape_hurricanes_content() -> None:
     assert result.sections[2].text == ""
     assert result.sections[2].id == "Systems"
 
-    sections = [
+    expected_sections = [
         "1975 Pacific hurricane season",
         "Season summary",
         "Systems",
@@ -64,5 +64,9 @@ def test_scrape_hurricanes_content() -> None:
         "References",
         "External links",
     ]
+    collected_sections = list()
     for section in result.sections:
-        assert section.title in sections
+        collected_sections.append(section.title)
+    # Assert it collects expected sections
+    assert len(set(expected_sections) - set(collected_sections)) == 0
+    print(result.model_dump())
