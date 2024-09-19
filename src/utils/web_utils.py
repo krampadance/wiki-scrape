@@ -4,6 +4,10 @@ from bs4 import BeautifulSoup, NavigableString, Tag
 from src.models.page_data import PageData, PageMetadata, SectionData
 from src.utils.text_utils import clean_text
 
+# TODO: Collect references data
+# TODO: Collect tables data
+# TODO: Implement correct linking between sections.
+
 
 # Function to fetch webpage content
 def fetch_webpage(url: str, **kwargs) -> str:
