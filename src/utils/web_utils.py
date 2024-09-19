@@ -1,5 +1,5 @@
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString, Tag
 
 from src.models.page_data import PageData, PageMetadata, SectionData
 from src.utils.text_utils import clean_text
@@ -21,6 +21,19 @@ def fetch_webpage(url: str, **kwargs) -> str:
 
 
 def collect_elements(child, element, heading_tag, ending_class, parent_id):
+    """Collects the elements specified in the next siblings of the child.
+    If ending class is found we return the collected data
+
+    Args:
+        child (_type_): _description_
+        element (_type_): _description_
+        heading_tag (_type_): _description_
+        ending_class (_type_): _description_
+        parent_id (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     section_content = []
     next_sibling = child.find_next_sibling()
     # Collect content until the next heading or a non-paragraph element
@@ -28,7 +41,6 @@ def collect_elements(child, element, heading_tag, ending_class, parent_id):
         if next_sibling.name == element:
             section_content.append(clean_text(next_sibling.get_text().strip()))
         next_sibling = next_sibling.find_next_sibling()
-
     # Create and return the section data
     return SectionData(
         title=clean_text(child.find(heading_tag).text.strip()) or "No title",
@@ -37,6 +49,27 @@ def collect_elements(child, element, heading_tag, ending_class, parent_id):
         id=child.find(heading_tag).get("id") or "No id",
         element_type=element,
     )
+
+
+def collect_intro_section(
+    body_content: Tag | NavigableString | None, first_heading: Tag | NavigableString
+) -> list[str]:
+    """Collects the intro section of the wiki page
+
+    Args:
+        body_content (Tag | NavigableString | None): The content of the body content of the wiki page
+        first_heading (Tag | NavigableString): The Tag of the first heading that shows up, to be used as terminating condition
+
+    Returns:
+        list[str]: List of the text in <p> elements
+    """
+    section_content = []
+    for sibling in body_content.find_all_next():
+        if sibling == first_heading:
+            break
+        if sibling.name == "p":
+            section_content.append(clean_text(sibling.get_text().strip()))
+    return section_content
 
 
 def scrape_webpage(content: str, **kwargs) -> PageData:
@@ -53,34 +86,34 @@ def scrape_webpage(content: str, **kwargs) -> PageData:
         raise BaseException("Content is empty")
     sections: list[SectionData] = []
     parent_id = None
-    heading = soup.find(id="firstHeading")
 
-    headsection = SectionData(
-        title=clean_text(heading.text.strip()),
-        parent_id=parent_id,
-        id="firstHeading",
-        element_type="h1",
+    # Get the body content
+    body_content = soup.find(id="mw-content-text")
+    # Get the list of headings of the page
+    headings = body_content.find_all(class_="mw-heading")
+    first_heading = headings[0]
+
+    # Collect main section data
+    intro_content = collect_intro_section(body_content, first_heading)
+
+    heading = soup.find(id="firstHeading")
+    sections.append(
+        SectionData(
+            title=clean_text(heading.text.strip()),
+            parent_id=parent_id,
+            id="firstHeading",
+            element_type="h1",
+            text="".join(intro_content),
+        )
     )
 
-    body_content = soup.find(id="mw-content-text")
-    # test = collect_elements(body_content, "p", None, "mw-heading", "mw-content-text")
-    parent_id = "firstHeading"
-    for child in body_content.find_all("div"):
-        class_list = child.get("class")
-
-        if class_list and "mw-content-ltr" in class_list:
-            section = collect_elements(child, "p", None, "mw-heading", parent_id)
-        if class_list and "mw-heading" in class_list:
-            # For mw-heading2 sections
-            if "mw-heading2" in class_list:
-                section = collect_elements(child, "p", "h2", "mw-heading", parent_id)
-                sections.append(section)
-                parent_id = section.id  # Update parent_id for nested sections
-
-            # For mw-heading3 sections
-            elif "mw-heading3" in class_list:
-                section = collect_elements(child, "p", "h3", "mw-heading", parent_id)
-                sections.append(section)
+    # Collect subsections data
+    for child in headings:
+        heading_class = child.get("class").pop()
+        section = collect_elements(
+            child, "p", f"h{heading_class[-1]}", "mw-heading", parent_id
+        )
+        sections.append(section)
     return PageData(
         title=soup.head.title.text,
         sections=sections,
