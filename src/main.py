@@ -1,9 +1,7 @@
+import argparse
 import logging
 
-from src.models.hurricane_data import HurricaneData
-from src.utils.file_utils import save_hurricane_file
-from src.utils.llm_utils import query_hurricane_data
-from src.utils.web_utils import fetch_webpage, scrape_webpage
+from src.tasks.scrape_hurricanes_to_csv import scrape_hurricanes_to_csv
 
 logging.basicConfig(
     level=logging.INFO,
@@ -13,22 +11,30 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-hurricane_seasons = [
-    "1975_Atlantic_hurricane_season",
-    "1975_Pacific_hurricane_season",
-    "1975_North_Indian_Ocean_cyclone_season",
-]
-
 
 if __name__ == "__main__":
-    url = f"https://en.wikipedia.org/wiki/{hurricane_seasons[1]}"
-    logger.info(f"Going to scrape {url}")
-    filename = f"{hurricane_seasons[1]}.csv"
-    webpage = fetch_webpage(url)
-    logger.info("Fetched page successfully")
-    scraped_data = scrape_webpage(webpage)
-    logger.info("Scraped page successfully")
-    logger.info("Contacting llm to retrieve hurricane info")
-    result: list[HurricaneData] = query_hurricane_data(scraped_data)
-    logger.info(f"Saving to {filename}")
-    save_hurricane_file(filename, result)
+    # Set up argument parsing
+    parser = argparse.ArgumentParser(
+        description="Scrape hurricane data from a Wikipedia URL and save to a CSV file."
+    )
+    parser.add_argument(
+        "url",
+        type=str,
+        help="The Wikipedia URL of the hurricane season",
+        default="https://en.wikipedia.org/wiki/1975_Pacific_hurricane_season",
+        nargs="?",
+    )
+    parser.add_argument(
+        "--filename",
+        type=str,
+        help="The name of the output CSV file",
+        default="hurricanes.csv",
+        nargs="?",
+    )
+
+    # Parse the command-line arguments
+    args = parser.parse_args()
+    try:
+        scrape_hurricanes_to_csv(args.url, args.filename)
+    except Exception as e:
+        logger.error(e)

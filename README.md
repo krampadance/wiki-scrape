@@ -79,6 +79,31 @@ you can use docker compose to install everything in a container.
     - You will be in app folder and you can execute: `python src/main.py` or `poetry run python src/main.py`
     - The file will be in `data/` folder since is mounted to a volume in the docker container.
 
+By running main.py without any arguments, it will take the default values for the parameters.
+
+`url: https://en.wikipedia.org/wiki/1975_Pacific_hurricane_season, filename: hurricanes.csv`
+
+If you want to specify another url just run:
+`python src/main.py new_url`
+
+If you want to specify filename:
+`python src/main.py new_url --filename new_filename`
+
+You can use: `python src/main.py -h` to see the help
+
+```bash
+usage: main.py [-h] [url] [filename]
+
+Scrape hurricane data from a Wikipedia URL and save to a CSV file.
+
+positional arguments:
+  url         The Wikipedia URL of the hurricane season
+  filename    The name of the output CSV file
+
+options:
+  -h, --help  show this help message and exit
+```
+
 Example Output
 ```bash
 root@c5437e3bfb7b:/app# python src/main.py 
