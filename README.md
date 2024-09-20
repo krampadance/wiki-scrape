@@ -53,10 +53,10 @@ In src folder the code is organized as:
 
 - main.py: The main script to run and do the whole flow
 - utils/ : Utility functions.
-1. web_utils.py: Functions related with getting url data and scraping
-2. text_utils.py: Functions related with text cleaning
-3. llm_utils.py: Functions related with the llm, like querying
-4. file_utils.py: Functions related with files, like saving csv file
+⋅⋅1. web_utils.py: Functions related with getting url data and scraping
+⋅⋅2. text_utils.py: Functions related with text cleaning
+⋅⋅3. llm_utils.py: Functions related with the llm, like querying
+⋅⋅4. file_utils.py: Functions related with files, like saving csv file
 
 - models/ : Classes representing data across the project. 
 
@@ -76,8 +76,8 @@ you can use docker compose to install everything in a container.
 
 1. In a terminal run: `docker compose up --build`
 2. Open a new terminal and run: `docker exec -it wiki_scrape bash`
-    a. You will be in app folder and you can execute: `python src/main.py` or `poetry run python src/main.py`
-    b. The file will be in `data/` folder since is mounted to a volume in the docker container.
+⋅⋅1. You will be in app folder and you can execute: `python src/main.py` or `poetry run python src/main.py`
+⋅⋅2. The file will be in `data/` folder since is mounted to a volume in the docker container.
 
 Example Output
 ```bash
