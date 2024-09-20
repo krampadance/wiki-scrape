@@ -117,6 +117,7 @@ root@c5437e3bfb7b:/app# exit
 ```
 
 # TODO
-- Use command prompt input
-- Exceptions
-- Tests
+Apart from the improvements discussed in previous sections, these are two main things that I have not issued:
+- Exception Handling: Handle exceptions more carefully. Currently they are caught in the main but a more careful design should take place
+- Tests: Even though I started with some integration tests when I was developing the scraping part, I never finalized them, and I would also like to 
+have tests for most of the parts developed.
