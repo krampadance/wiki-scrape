@@ -60,9 +60,38 @@ In src folder the code is organized as:
 
 - models/ : Classes representing data across the project. 
 
+# Execution
+You can either run it locally using poetry to manage dependencies and virtual environment.
+
+1. Install [poetry](https://python-poetry.org/docs/)
+2. In parent folder of the codebase run: `poetry shell` to activate virtual environment
+3. Install dependencies: `poetry shell`
+4. Create a .env file based on the template.env file. Add the openai api key and set the folder to 'data'.
+5. Run script: `python src/main.py` or `poetry run python src/main.py`
+6. The resulting file should be found in `data/` folder
+
+or,
+
+you can use docker compose to install everything in a container.
+
+1. In a terminal run: `docker compose up --build`
+2. Open a new terminal and run: `docker exec -it wiki_scrape bash`
+    a. You will be in app folder and you can execute: `python src/main.py` or `poetry run python src/main.py`
+    b. The file will be in `data/` folder since is mounted to a volume in the docker container.
+
+Example Output
+```bash
+root@c5437e3bfb7b:/app# python src/main.py 
+INFO [2024-09-20 09:33:21]: Going to scrape https://en.wikipedia.org/wiki/1975_Pacific_hurricane_season
+INFO [2024-09-20 09:33:21]: Fetched page successfully
+INFO [2024-09-20 09:33:21]: Scraped page successfully
+INFO [2024-09-20 09:33:21]: Contacting llm to retrieve hurricane info
+INFO [2024-09-20 09:33:41]: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO [2024-09-20 09:33:41]: Saving to 1975_Pacific_hurricane_season.csv
+root@c5437e3bfb7b:/app# exit
+```
+
 # TODO
-- requirments.txt
-- Dockerize
 - Use command prompt input
 - Exceptions
 - Tests
