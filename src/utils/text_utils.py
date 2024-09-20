@@ -2,7 +2,9 @@ import re
 
 
 def remove_special_characters(text: str) -> str:
+    # Replace special space characters with space
     text = re.sub(r"\s+", " ", text)
+    # Replaces other spaceial charracters
     return re.sub(r"[^\w\s.,;?!\[\]\(\)-]", "", text)
 
 

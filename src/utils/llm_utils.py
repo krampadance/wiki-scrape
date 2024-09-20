@@ -11,7 +11,15 @@ from src.models.page_data import PageData
 load_dotenv()
 
 
-def query_llm(prompt: str):
+def query_llm(prompt: str) -> str:
+    """Queries the llm using a simple prompt.
+
+    Args:
+        prompt (str): A string with the prompt
+
+    Returns:
+        str: The string response of the llm
+    """
     client = OpenAI(
         # This is the default and can be omitted
         api_key=os.getenv("API_KEY"),
@@ -24,7 +32,16 @@ def query_llm(prompt: str):
     return chat_completion.choices[0].message.content
 
 
-def query_hurricane_data(page_data: PageData):
+def query_hurricane_data(page_data: PageData) -> list[HurricaneData]:
+    """Queries llm using function calling. The results are structured, so they are loaded into a
+    list of HurricaneData
+
+    Args:
+        page_data (PageData): The PageData collected from scraping process
+
+    Returns:
+        list[HurricaneData]: Each hurricane data
+    """
     function_schema = {
         "name": "extract_hurricane_info",
         "description": "Extracts hurricane information from the text, such as name, start and end date and fatalities.",

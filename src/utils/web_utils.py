@@ -24,19 +24,27 @@ def fetch_webpage(url: str, **kwargs) -> str:
     return response.text
 
 
-def collect_elements(child, element, heading_tag, ending_class, parent_id):
-    """Collects the elements specified in the next siblings of the child.
+# TODO: This needs to be generalized or updated. Hasnt been tested well
+def collect_elements(
+    child: Tag | NavigableString | None,
+    element: str,
+    heading_tag: str,
+    ending_class: str,
+    parent_id: str,
+) -> SectionData:
+    """ "Collects the elements specified in the next siblings of the child.
     If ending class is found we return the collected data
 
     Args:
-        child (_type_): _description_
-        element (_type_): _description_
-        heading_tag (_type_): _description_
-        ending_class (_type_): _description_
-        parent_id (_type_): _description_
+        child (Tag | NavigableString | None): Html data to check
+        element (str): Elements we want to collect eg : <p>
+        heading_tag (str): The tag that we collect the title from
+        ending_class (str): Terminate the collection when this class is found.
+            Used to collect data in between classes
+        parent_id (str): The id of the parent
 
     Returns:
-        _type_: _description_
+        SectionData: The data collected
     """
     section_content = []
     next_sibling = child.find_next_sibling()
@@ -55,6 +63,7 @@ def collect_elements(child, element, heading_tag, ending_class, parent_id):
     )
 
 
+# TODO: Remove this when refactoring scraping. Scraping is not done in the smartest way
 def collect_intro_section(
     body_content: Tag | NavigableString | None, first_heading: Tag | NavigableString
 ) -> list[str]:
