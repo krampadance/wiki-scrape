@@ -60,12 +60,12 @@ In src folder the code is organized as:
 
 - models/ : Classes representing data across the project. 
 
-# Execution
+# Installation and Execution Instructions
 You can either run it locally using poetry to manage dependencies and virtual environment.
 
 1. Install [poetry](https://python-poetry.org/docs/)
 2. In parent folder of the codebase run: `poetry shell` to activate virtual environment
-3. Install dependencies: `poetry shell`
+3. Install dependencies: `poetry install`
 4. Create a .env file based on the template.env file. Add the openai api key and set the folder to 'data'.
 5. Run script: `python src/main.py` or `poetry run python src/main.py`
 6. The resulting file should be found in `data/` folder
