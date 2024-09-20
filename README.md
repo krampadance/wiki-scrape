@@ -27,16 +27,16 @@ The model’s parameters (e.g., temperature) are adjusted to produce determinist
 After receiving the structured data from the LLM, the results are saved to a CSV file for further analysis or storage. Storing the output in CSV format ensures easy readability, processing, and future use for reporting or data visualization.
 
 # Improvements:
-## Section Hierarchy:
+## Section Hierarchy
 Implement a tree-like structure for sections and subsections by adding id and parent_id attributes to the PageData model. This will allow sections to be nested appropriately, preserving the hierarchical nature of the content.
     
-## Content Capture:
+## Content Capture
 Collect more content than just the paragraph elements.
     - Tables: Collect `<table>` elements, parse them, and store the data in a structured format such as lists or dictionaries.
     - Images and Captions: Extract `<img>` tags and their associated captions. Store metadata like image URLs and caption or description.
     - Links: Capture `<a>` tags. Currently no information is captured in the References or See Also sections.
     
-## Generalized Scraping:
+## Generalized Scraping
 The current model focuses on Wikipedia, but further generalization would involve abstracting the scraping process to handle other websites or document types (e.g., blogs, academic papers). This could be achieved by creating modular scrapers that adapt to different website structures.
 
 ## Split function calling 
@@ -53,10 +53,10 @@ In src folder the code is organized as:
 
 - main.py: The main script to run and do the whole flow
 - utils/ : Utility functions.
-⋅⋅1. web_utils.py: Functions related with getting url data and scraping
-⋅⋅2. text_utils.py: Functions related with text cleaning
-⋅⋅3. llm_utils.py: Functions related with the llm, like querying
-⋅⋅4. file_utils.py: Functions related with files, like saving csv file
+    -  web_utils.py: Functions related with getting url data and scraping
+    - text_utils.py: Functions related with text cleaning
+    - llm_utils.py: Functions related with the llm, like querying
+    - file_utils.py: Functions related with files, like saving csv file
 
 - models/ : Classes representing data across the project. 
 
@@ -76,8 +76,8 @@ you can use docker compose to install everything in a container.
 
 1. In a terminal run: `docker compose up --build`
 2. Open a new terminal and run: `docker exec -it wiki_scrape bash`
-⋅⋅1. You will be in app folder and you can execute: `python src/main.py` or `poetry run python src/main.py`
-⋅⋅2. The file will be in `data/` folder since is mounted to a volume in the docker container.
+    - You will be in app folder and you can execute: `python src/main.py` or `poetry run python src/main.py`
+    - The file will be in `data/` folder since is mounted to a volume in the docker container.
 
 Example Output
 ```bash
