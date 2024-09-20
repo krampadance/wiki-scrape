@@ -48,7 +48,20 @@ LLM has token limits for each model. So in order not to reach this limit in a si
 ## Define better prompts
 I tried different prompts and the results differed from prompt to prompt. So the way one interacts with the model is of high importance.
 
+# Code structure
+In src folder the code is organized as:
+
+- main.py: The main script to run and do the whole flow
+- utils/ : Utility functions.
+1. web_utils.py: Functions related with getting url data and scraping
+2. text_utils.py: Functions related with text cleaning
+3. llm_utils.py: Functions related with the llm, like querying
+4. file_utils.py: Functions related with files, like saving csv file
+
+- models/ : Classes representing data across the project. 
+
 # TODO
+- requirments.txt
 - Dockerize
 - Use command prompt input
 - Exceptions
